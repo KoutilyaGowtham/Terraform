@@ -32,3 +32,13 @@ resource "aws_security_group" "nat" {
                 cidr_block = "${aws_subnet.us-east-1d-private.cidr_block}"
                 }
         }
+
+resource "aws_instance" "nat" {
+        ami = "${var.aws_ami_nat}"
+        instance_type = "${var.aws_instance_type}"
+        availability_zone = "${var.aws_availabilty_zone}"
+        key_name = "${var.aws_key_name}"
+        security_groups = "${aws_security_group.nat.id}"
+        subnet_id = "${aws_subnet.us-east-1b-public.id}"
+        associate_public_ip_address = "true"
+        
