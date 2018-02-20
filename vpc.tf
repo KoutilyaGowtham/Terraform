@@ -49,7 +49,8 @@ resource "aws_route_table_association" "public_route_table" {
 resource "aws_route_table" "private_route_table" {
         vpc_id = "${aws_vpc.default.id}"
         route {
-                cidr_block = "10.0.0.0/16"
+                cidr_block = "0.0.0.0/0"
+                instance_id = "${aws_instance.nat.id}"
                 }
         }
 
@@ -63,7 +64,7 @@ resource "aws_security_group" "nat" {
                 protocol ="tcp"
                 cidr_block = "${aws_subnet.us-east-1b-private.cidr_block}"
                 }
-        ingress {
+        egress {
                 from_port = 0
                 to_port = 65535
                 protocol = "tcp"
@@ -74,7 +75,7 @@ resource "aws_security_group" "nat" {
 resource "aws_instance" "nat" {
         ami = "${var.aws_ami_nat}"
         instance_type = "${var.aws_instance_type}"
-        availability_zone = "us-east-1a
+        availability_zone = "us-east-1a"
         key_name = "${var.aws_key_name}"
         security_groups = "${aws_security_group.nat.id}"
         subnet_id = "${aws_subnet.us-east-1b-public.id}"
@@ -94,6 +95,11 @@ resource "aws_subnet" "private_subnet_1a" {
         cidr_block = "10.0.1.0/24"
         availability_zone = "us-east-1a"
 }
+
+resource "aws_route_table_association" "private_route_table" {
+        subnet_id = "${aws_subnet.private_subnet_1a.id}"
+        route_table_id = "${aws_route_table.private_route_table.id}"
+        }
         
 
 
