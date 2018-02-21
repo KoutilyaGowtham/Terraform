@@ -1,7 +1,6 @@
 # Creating Auto-Scaling Group
-data "aws_region" "region" {
-  default = "${var.region}"
+provider "aws" {
+  region = "${var.region}"
   }
-resource "aws_autoscaling_group" "asg_1" {
-  
-  
+
+resource "aws_
